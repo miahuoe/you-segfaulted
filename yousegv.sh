@@ -1,7 +1,8 @@
 #!/usr/bin/bash
 
-if [ $# -lt 1 ] ; then
-	echo "Usage: $0 <video-to-play>"
+if [ $# -lt 1 ]
+then
+	echo "Usage: $(basename $0) <video-to-play>"
 	exit
 fi
 
@@ -15,8 +16,10 @@ sleep 1
 dmesg -w | while read LINE
 do
 	t=$(echo "$LINE" | extract_timestamp)
-	if [ $t -gt $recent ] ; then
-		mpv --fs "$1"
+	if [[ "$LINE" == *"segfault"* ]] && [ $t -gt $recent ]
+	then
+		mpv --fs "$1" &
 		recent=$t
+		sleep 1
 	fi
 done
